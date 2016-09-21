@@ -19,16 +19,15 @@ var BlocklyWorkspace = React.createClass({
     initialXml: React.PropTypes.string,
     workspaceConfiguration: React.PropTypes.object,
     wrapperDivClassName: React.PropTypes.string,
-    xmlDidChange: React.PropTypes.func,
-    codeChanged: React.PropTypes.func,
-    languageToGenerate: React.PropTypes.string,
+    codeDidChange: React.PropTypes.func,
+    languageToGenerate: React.PropTypes.oneOf(['PHP', 'JavaScript', 'Xml']),
     toolboxMode: React.PropTypes.oneOf(['CATEGORIES', 'BLOCKS'])
   },
 
   getInitialState: function() {
     return {
       workspace: null,
-      xml: this.props.initialXml
+      code: this.props.initialXml
     };
   },
 
@@ -41,47 +40,35 @@ var BlocklyWorkspace = React.createClass({
       })
     );
 
-    if (this.state.xml) {
-      this.importFromXml(this.state.xml);
-      if (this.props.xmlDidChange) {
-        this.props.xmlDidChange(this.state.xml);
+    if (this.state.code) {
+      this.importFromXml(this.state.code);
+      if (this.props.codeDidChange) {
+        this.props.codeDidChange(this.state.code);
       }
     }
 
     this.state.workspace.addChangeListener(debounce(function() {
-      /**
-       * workspace to code using the selected language
-       * */
-      if(this.props.languageToGenerate){
-        var newCode = Blockly[this.props.languageToGenerate].workspaceToCode(this.state.workspace);
 
-        this.setState({newCode}, function () {
-          if(this.props.codeChanged){
-            this.props.codeChanged(this.state.newCode)
-          }
-        }.bind(this))
-      }
-
-      var newXml = Blockly.Xml.domToText(Blockly.Xml.workspaceToDom(this.state.workspace));
-      if (newXml == this.state.xml) {
+      var newXml = Blockly[this.props.languageToGenerate].workspaceToCode(this.state.workspace);
+      if (newXml == this.state.code) {
         return;
       }
 
-      this.setState({xml: newXml}, function() {
-        if (this.props.xmlDidChange) {
-          this.props.xmlDidChange(this.state.xml);
+      this.setState({code: newXml}, function() {
+        if (this.props.codeDidChange) {
+          this.props.codeDidChange(this.state.code);
         }
       }.bind(this));
     }.bind(this), 200));
   },
 
-  importFromXml: function(xml) {
-    Blockly.Xml.domToWorkspace(this.state.workspace, Blockly.Xml.textToDom(xml));
+  importFromXml: function(code) {
+    Blockly.Xml.domToWorkspace(this.state.workspace, Blockly.Xml.textToDom(code));
   },
 
   componentWillReceiveProps: function(newProps) {
     if (this.props.initialXml != newProps.initialXml) {
-      this.setState({xml: newProps.initialXml});
+      this.setState({code: newProps.initialXml});
     }
   },
 
@@ -117,9 +104,9 @@ var BlocklyWorkspace = React.createClass({
 
     return (
       <div className={this.props.wrapperDivClassName}>
-        <xml style={{display: "none"}} ref="dummyToolbox">
+        <code style={{display: "none"}} ref="dummyToolbox">
           {dummyToolboxContent}
-        </xml>
+        </code>
         <div ref="editorDiv" className={this.props.wrapperDivClassName} />
       </div>
     );

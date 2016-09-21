@@ -1,100 +1,136 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.3/react.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.3/react-dom.js"></script>
-  <script src="https://blockly-demo.appspot.com/static/blockly_compressed.js"></script>
-  <script src="https://blockly-demo.appspot.com/static/blocks_compressed.js"></script>
-  <script src="https://blockly-demo.appspot.com/static/demos/code/msg/en.js"></script>
-  <script src="https://blockly-demo.appspot.com/static/msg/js/en.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.3/react.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.3/react-dom.js"></script>
+    <script src="https://blockly-demo.appspot.com/static/blockly_compressed.js"></script>
+    <script src="https://blockly-demo.appspot.com/static/php_compressed.js"></script>
+    <script src="https://blockly-demo.appspot.com/static/javascript_compressed.js"></script>
+    <script src="https://blockly-demo.appspot.com/static/blocks_compressed.js"></script>
+    <script src="https://blockly-demo.appspot.com/static/demos/code/msg/en.js"></script>
+    <script src="https://blockly-demo.appspot.com/static/msg/js/en.js"></script>
 
-  <script src="../dist/react-blockly-component.js"></script>
+    <script>
+        Blockly.Blocks['johnny'] = {
+            init: function () {
+                this.appendDummyInput()
+                        .appendField("Hello World!");
+                this.setColour(260);
+                this.setTooltip('');
+                this.setHelpUrl('http://www.example.com/');
+            }
+        };
 
-  <style type="text/css">
-  .fill-height {
-    height: 100%;
-  }
-  </style>
+        Blockly.PHP['johnny'] = function (block) {
+            // TODO: Assemble PHP into code variable.
+            var code = 'echo "hello world";\n';
+            return code;
+        };
 
-  <script type="text/javascript">
-    window.addEventListener('load', function() {
-      var editor = React.createElement(ReactBlocklyComponent.BlocklyEditor, {
-        workspaceConfiguration: {
-          grid: {
-            spacing: 20,
-            length: 3,
-            colour: '#ccc',
-            snap: true
-          }
-        },
-        toolboxCategories: [
-          {
-            name: "Controls",
-            blocks: [
-              { type: "controls_if" },
-              {
-                type: "controls_repeat_ext",
-                values: {
-                  "TIMES": {
-                    type: "math_number",
-                    shadow: true,
-                    fields: {
-                      "NUM": 10
-                    }
-                  }
-                },
-                statements: {
-                  "DO": {
-                    type: "text_print",
-                    shadow: true,
-                    values: {
-                      "TEXT": {
-                        type: "text",
-                        shadow: true,
-                        fields: {
-                          "TEXT": "abc"
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          {
-            name: "Text",
-            blocks: [
-              { type: "text" },
-              {
-                type: "text_print",
-                values: {
-                  "TEXT": {
-                    type: "text",
-                    shadow: true,
-                    fields: {
-                      "TEXT": "abc"
-                    }
-                  }
-                }
-              }
-            ]
-          }
-        ],
-        initialXml: '<xml xmlns="http://www.w3.org/1999/xhtml"><block type="text" x="70" y="30"><field name="TEXT"></field></block></xml>',
-        wrapperDivClassName: 'fill-height',
-        xmlDidChange: function(newXml) {
-          document.getElementById('generated-xml').innerText = newXml;
+        Blockly.Javascript['johnny'] = function (block) {
+            // TODO: Assemble PHP into code variable.
+            var code = 'alert("hello world");\n';
+            return code;
+        };
+    </script>
+    <script src="../dist/react-blockly-component.js"></script>
+
+    <style type="text/css">
+        .fill-height {
+            height: 100%;
         }
-      });
-      ReactDOM.render(editor, document.getElementById('blockly'));
-    });
-  </script>
+    </style>
+
+    <script type="text/javascript">
+        window.addEventListener('load', function () {
+            var editor = React.createElement(ReactBlocklyComponent.BlocklyEditor, {
+                workspaceConfiguration: {
+                    grid: {
+                        spacing: 20,
+                        length: 3,
+                        colour: '#ccc',
+                        snap: true
+                    }
+                },
+                toolboxCategories: [
+                    {
+                        name: "Controls",
+                        blocks: [
+                            {type: "controls_if"},
+                            {
+                                type: "controls_repeat_ext",
+                                values: {
+                                    "TIMES": {
+                                        type: "math_number",
+                                        shadow: true,
+                                        fields: {
+                                            "NUM": 10
+                                        }
+                                    }
+                                },
+                                statements: {
+                                    "DO": {
+                                        type: "text_print",
+                                        shadow: true,
+                                        values: {
+                                            "TEXT": {
+                                                type: "text",
+                                                shadow: true,
+                                                fields: {
+                                                    "TEXT": "abc"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        name: "Text",
+                        blocks: [
+                            {type: "text"},
+                            {
+                                type: "text_print",
+                                values: {
+                                    "TEXT": {
+                                        type: "text",
+                                        shadow: true,
+                                        fields: {
+                                            "TEXT": "abc"
+                                        }
+                                    }
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        name: "Mehdi custom blocks",
+                        blocks: [
+                            {
+                                "type": "johnny",
+                                "message0": "Hello World!",
+                                "colour": "#ccc",
+                                "tooltip": "",
+                                "helpUrl": "http://www.example.com/"
+                            }
+                        ]
+                    }
+                ],
+                initialXml: '<xml xmlns="http://www.w3.org/1999/xhtml"><block type="text" x="70" y="30"><field name="TEXT"></field></block></xml>',
+                wrapperDivClassName: 'fill-height',
+                codeDidChange: function (newCode) {
+                    document.getElementById('generated-code').innerText = newCode;
+                },
+                languageToGenerate: 'PHP'
+            });
+            ReactDOM.render(editor, document.getElementById('blockly'));
+        });
+    </script>
 </head>
 <body>
-  <div style="height: 600px; width: 800px;" id="blockly">
-  </div>
-  <pre id="generated-xml">
-  </pre>
+<div style="height: 600px; width: 800px;" id="blockly"></div>
+<pre id="generated-code"></pre>
 </body>
 </html>
