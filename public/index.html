@@ -11,29 +11,6 @@
     <script src="https://blockly-demo.appspot.com/static/demos/code/msg/en.js"></script>
     <script src="https://blockly-demo.appspot.com/static/msg/js/en.js"></script>
 
-    <script>
-        Blockly.Blocks['johnny'] = {
-            init: function () {
-                this.appendDummyInput()
-                        .appendField("Hello World!");
-                this.setColour(260);
-                this.setTooltip('');
-                this.setHelpUrl('http://www.example.com/');
-            }
-        };
-
-        Blockly.PHP['johnny'] = function (block) {
-            // TODO: Assemble PHP into code variable.
-            var code = 'echo "hello world";\n';
-            return code;
-        };
-
-        Blockly.Javascript['johnny'] = function (block) {
-            // TODO: Assemble PHP into code variable.
-            var code = 'alert("hello world");\n';
-            return code;
-        };
-    </script>
     <script src="../dist/react-blockly-component.js"></script>
 
     <style type="text/css">
@@ -102,18 +79,6 @@
                                         }
                                     }
                                 }
-                            }
-                        ]
-                    },
-                    {
-                        name: "Mehdi custom blocks",
-                        blocks: [
-                            {
-                                "type": "johnny",
-                                "message0": "Hello World!",
-                                "colour": "#ccc",
-                                "tooltip": "",
-                                "helpUrl": "http://www.example.com/"
                             }
                         ]
                     }
