@@ -20,6 +20,8 @@ var BlocklyWorkspace = React.createClass({
     workspaceConfiguration: React.PropTypes.object,
     wrapperDivClassName: React.PropTypes.string,
     xmlDidChange: React.PropTypes.func,
+    codeChanged: React.PropTypes.func,
+    languageToGenerate: React.PropTypes.string,
     toolboxMode: React.PropTypes.oneOf(['CATEGORIES', 'BLOCKS'])
   },
 
@@ -47,6 +49,19 @@ var BlocklyWorkspace = React.createClass({
     }
 
     this.state.workspace.addChangeListener(debounce(function() {
+      /**
+       * workspace to code using the selected language
+       * */
+      if(this.props.languageToGenerate){
+        var newCode = Blockly[this.props.languageToGenerate].workspaceToCode(this.state.workspace);
+
+        this.setState({newCode}, function () {
+          if(this.props.codeChanged){
+            this.props.codeChanged(this.state.newCode)
+          }
+        }.bind(this))
+      }
+
       var newXml = Blockly.Xml.domToText(Blockly.Xml.workspaceToDom(this.state.workspace));
       if (newXml == this.state.xml) {
         return;
