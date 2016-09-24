@@ -13,6 +13,7 @@ var BlocklyEditor = React.createClass({
         toolboxCategories: React.PropTypes.array,
         toolboxBlocks: React.PropTypes.array,
         codeDidChange: React.PropTypes.func,
+        xmlDidChange: React.PropTypes.func,
         languageToGenerate: React.PropTypes.oneOf(['PHP', 'JavaScript', 'Xml']),
         processToolboxCategory: React.PropTypes.func
     },
@@ -27,9 +28,15 @@ var BlocklyEditor = React.createClass({
         this.toolboxDidUpdate();
     },
 
-    codeDidChange: function (newXml) {
+    codeDidChange: function (newCode) {
         if (this.props.codeDidChange) {
-            this.props.codeDidChange(newXml);
+            this.props.codeDidChange(newCode);
+        }
+    },
+
+    xmlDidChange: function (newXml) {
+        if (this.props.xmlDidChange) {
+            this.props.xmlDidChange(newXml);
         }
     },
 
@@ -61,6 +68,7 @@ var BlocklyEditor = React.createClass({
                     ref="workspace"
                     initialXml={this.props.initialXml}
                     toolboxMode={toolboxMode}
+                    xmlDidChange={this.xmlDidChange}
                     codeDidChange={this.codeDidChange}
                     languageToGenerate={this.props.languageToGenerate}
                     wrapperDivClassName={this.props.wrapperDivClassName}
