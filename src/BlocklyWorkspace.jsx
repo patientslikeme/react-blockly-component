@@ -39,7 +39,8 @@ var BlocklyWorkspace = React.createClass({
     this.state.workspace = Blockly.inject(
       this.refs.editorDiv,
       Object.assign({}, (this.props.workspaceConfiguration || {}), {
-        toolbox: ReactDOM.findDOMNode(this.refs.dummyToolbox)
+        toolbox: ReactDOM.findDOMNode(this.refs.dummyToolbox),
+        media: '../media/'
       })
     );
 
