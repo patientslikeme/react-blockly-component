@@ -19,26 +19,37 @@ var BlocklyWorkspace = React.createClass({
     initialXml: React.PropTypes.string,
     workspaceConfiguration: React.PropTypes.object,
     wrapperDivClassName: React.PropTypes.string,
+    codeDidChange: React.PropTypes.func,
     xmlDidChange: React.PropTypes.func,
+    languageToGenerate: React.PropTypes.oneOf(['PHP', 'JavaScript', 'Xml']),
     toolboxMode: React.PropTypes.oneOf(['CATEGORIES', 'BLOCKS'])
   },
 
   getInitialState: function() {
     return {
       workspace: null,
-      xml: this.props.initialXml
+      code: this.props.initialXml,
+      xml: this.props.initialXml,
     };
   },
 
   componentDidMount: function() {
+
     // TODO figure out how to use setState here without breaking the toolbox when switching tabs
     this.state.workspace = Blockly.inject(
       this.refs.editorDiv,
       Object.assign({}, (this.props.workspaceConfiguration || {}), {
-        toolbox: ReactDOM.findDOMNode(this.refs.dummyToolbox)
+        toolbox: ReactDOM.findDOMNode(this.refs.dummyToolbox),
+        media: '../media/'
       })
     );
 
+    if (this.state.code) {
+      this.importFromXml(this.state.code);
+      if (this.props.codeDidChange) {
+        this.props.codeDidChange(this.state.code);
+      }
+    }
     if (this.state.xml) {
       this.importFromXml(this.state.xml);
       if (this.props.xmlDidChange) {
@@ -46,9 +57,25 @@ var BlocklyWorkspace = React.createClass({
       }
     }
 
+
+
     this.state.workspace.addChangeListener(debounce(function() {
+
+      var newCode = Blockly[this.props.languageToGenerate].workspaceToCode(this.state.workspace);
+      if (newCode == this.state.code) {
+        return;
+      }
+
+      this.setState({code: newCode}, function() {
+        if (this.props.codeDidChange) {
+          this.props.codeDidChange(this.state.code);
+        }
+      }.bind(this));
+
+
       var newXml = Blockly.Xml.domToText(Blockly.Xml.workspaceToDom(this.state.workspace));
-      if (newXml == this.state.xml) {
+
+      if(newXml == this.state.xml){
         return;
       }
 
@@ -60,13 +87,13 @@ var BlocklyWorkspace = React.createClass({
     }.bind(this), 200));
   },
 
-  importFromXml: function(xml) {
-    Blockly.Xml.domToWorkspace(this.state.workspace, Blockly.Xml.textToDom(xml));
+  importFromXml: function(code) {
+    Blockly.Xml.domToWorkspace(this.state.workspace, Blockly.Xml.textToDom(code));
   },
 
   componentWillReceiveProps: function(newProps) {
     if (this.props.initialXml != newProps.initialXml) {
-      this.setState({xml: newProps.initialXml});
+      this.setState({code: newProps.initialXml,xml: newProps.initialXml});
     }
   },
 
@@ -102,9 +129,9 @@ var BlocklyWorkspace = React.createClass({
 
     return (
       <div className={this.props.wrapperDivClassName}>
-        <xml style={{display: "none"}} ref="dummyToolbox">
+        <code style={{display: "none"}} ref="dummyToolbox">
           {dummyToolboxContent}
-        </xml>
+        </code>
         <div ref="editorDiv" className={this.props.wrapperDivClassName} />
       </div>
     );
