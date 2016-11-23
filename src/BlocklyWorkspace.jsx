@@ -18,6 +18,7 @@ var BlocklyWorkspace = React.createClass({
   propTypes: {
     initialXml: React.PropTypes.string,
     workspaceConfiguration: React.PropTypes.object,
+    className: React.PropTypes.string,
     wrapperDivClassName: React.PropTypes.string,
     xmlDidChange: React.PropTypes.func,
     onImportXmlError: React.PropTypes.func,
@@ -113,7 +114,7 @@ var BlocklyWorkspace = React.createClass({
     }
 
     return (
-      <div className={this.props.wrapperDivClassName}>
+      <div className={this.props.className}>
         <xml style={{display: "none"}} ref="dummyToolbox">
           {dummyToolboxContent}
         </xml>
