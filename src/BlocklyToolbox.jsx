@@ -66,6 +66,7 @@ class BlocklyToolbox extends React.Component {
       key={`category_${category.get('name')}_${i}`}
       blocks={category.get('blocks')}
       categories={category.get('categories')}
+      buttons={category.get('buttons')}
     />);
   });
 

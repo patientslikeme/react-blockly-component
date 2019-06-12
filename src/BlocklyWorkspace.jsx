@@ -24,6 +24,10 @@ class BlocklyWorkspace extends React.Component {
     workspaceDidChange: PropTypes.func,
     onImportXmlError: PropTypes.func,
     toolboxMode: PropTypes.oneOf(['CATEGORIES', 'BLOCKS']),
+    buttonCallbacks: PropTypes.arrayOf(PropTypes.shape({
+      key: PropTypes.string.isRequired,
+      callback: PropTypes.func.isRequired,
+    }).isRequired),
   };
 
   static defaultProps = {
@@ -34,6 +38,7 @@ class BlocklyWorkspace extends React.Component {
     workspaceDidChange: null,
     onImportXmlError: null,
     toolboxMode: 'BLOCKS',
+    buttonCallbacks: null,
   };
 
   constructor(props) {
@@ -61,6 +66,12 @@ class BlocklyWorkspace extends React.Component {
       } else {
         this.setState({ xml: null }, this.xmlDidChange);
       }
+    }
+
+    if (this.props.buttonCallbacks) {
+      this.props.buttonCallbacks.forEach((item) => {
+        this.state.workspace.registerButtonCallback(item.key, item.callback);
+      });
     }
 
     this.state.workspace.addChangeListener(this.workspaceDidChange);

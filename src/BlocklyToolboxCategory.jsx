@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 
 import BlocklyToolboxBlock from './BlocklyToolboxBlock';
+import BlocklyToolboxButton from './BlocklyToolboxButton';
 
 class BlocklyToolboxCategory extends React.PureComponent {
   static propTypes = {
@@ -12,6 +13,7 @@ class BlocklyToolboxCategory extends React.PureComponent {
     expanded: PropTypes.string,
     categories: ImmutablePropTypes.list,
     blocks: ImmutablePropTypes.list,
+    buttons: ImmutablePropTypes.list,
   };
 
   static defaultProps = {
@@ -21,6 +23,7 @@ class BlocklyToolboxCategory extends React.PureComponent {
     expanded: null,
     categories: null,
     blocks: null,
+    buttons: null,
   };
 
   static renderCategory = (category, key) => {
@@ -37,15 +40,23 @@ class BlocklyToolboxCategory extends React.PureComponent {
       key={key}
       blocks={category.get('blocks')}
       categories={category.get('categories')}
+      buttons={category.get('buttons')}
     />);
   };
 
   render = () => {
     const subcategories = (this.props.categories || []).map(BlocklyToolboxCategory.renderCategory);
     const blocks = (this.props.blocks || []).map(BlocklyToolboxBlock.renderBlock);
+    const buttons = (this.props.buttons || []).map(BlocklyToolboxButton.renderButton);
 
     return (
-      <category name={this.props.name} custom={this.props.custom} colour={this.props.colour} expanded={this.props.expanded}>
+      <category
+        name={this.props.name}
+        custom={this.props.custom}
+        colour={this.props.colour}
+        expanded={this.props.expanded}
+      >
+        {buttons}
         {blocks}
         {subcategories}
       </category>
