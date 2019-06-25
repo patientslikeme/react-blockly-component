@@ -31,6 +31,11 @@ const CategoryPropType = PropTypes.shape({
   categories: PropTypes.arrayOf(PropTypes.shape(categoryPropsNonRecursive)),
 });
 
+const CallbackType = PropTypes.shape({
+  key: PropTypes.string.isRequired,
+  callback: PropTypes.func.isRequired,
+});
+
 class BlocklyEditor extends React.Component {
   static propTypes = {
     initialXml: PropTypes.string,
@@ -42,10 +47,8 @@ class BlocklyEditor extends React.Component {
     workspaceDidChange: PropTypes.func,
     onImportXmlError: PropTypes.func,
     processToolboxCategory: PropTypes.func,
-    buttonCallbacks: PropTypes.arrayOf(PropTypes.shape({
-      key: PropTypes.string.isRequired,
-      callback: PropTypes.func.isRequired,
-    }).isRequired),
+    buttonCallbacks: PropTypes.arrayOf(CallbackType.isRequired),
+    toolboxCategoryCallbacks: PropTypes.arrayOf(CallbackType.isRequired),
   };
 
   static defaultProps = {
@@ -59,6 +62,7 @@ class BlocklyEditor extends React.Component {
     onImportXmlError: null,
     processToolboxCategory: null,
     buttonCallbacks: null,
+    toolboxCategoryCallbacks: null,
   };
 
   componentDidMount = () => {
@@ -141,6 +145,7 @@ class BlocklyEditor extends React.Component {
           wrapperDivClassName={this.props.wrapperDivClassName}
           workspaceConfiguration={this.props.workspaceConfiguration}
           buttonCallbacks={this.props.buttonCallbacks}
+          toolboxCategoryCallbacks={this.props.toolboxCategoryCallbacks}
         />
       </div>
     );

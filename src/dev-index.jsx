@@ -20,9 +20,11 @@ class TestEditor extends React.Component {
         toolboxCategories: this.state.toolboxCategories.concat([
           {
             name: 'Buttons',
-            buttons: [
-              { text: 'Show alert!', callbackKey: 'showAlertCallback' },
-              { text: 'Log to console!', callbackKey: 'logToConsoleCallback' },
+            items: [
+              { element: 'label', text: 'Show alert!' },
+              { element: 'block', type: 'text' },
+              { element: 'button', text: 'Show alert!', callbackKey: 'showAlertCallback' },
+              { element: 'button', text: 'Log to console!', callbackKey: 'logToConsoleCallback' },
             ],
           },
           {

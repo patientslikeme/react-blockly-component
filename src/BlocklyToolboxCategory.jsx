@@ -4,6 +4,7 @@ import ImmutablePropTypes from 'react-immutable-proptypes';
 
 import BlocklyToolboxBlock from './BlocklyToolboxBlock';
 import BlocklyToolboxButton from './BlocklyToolboxButton';
+import BlocklyToolboxLabel from './BlocklyToolboxLabel';
 
 class BlocklyToolboxCategory extends React.PureComponent {
   static propTypes = {
@@ -14,6 +15,8 @@ class BlocklyToolboxCategory extends React.PureComponent {
     categories: ImmutablePropTypes.list,
     blocks: ImmutablePropTypes.list,
     buttons: ImmutablePropTypes.list,
+    labels: ImmutablePropTypes.list,
+    items: ImmutablePropTypes.list,
   };
 
   static defaultProps = {
@@ -24,6 +27,8 @@ class BlocklyToolboxCategory extends React.PureComponent {
     categories: null,
     blocks: null,
     buttons: null,
+    labels: null,
+    items: null,
   };
 
   static renderCategory = (category, key) => {
@@ -41,13 +46,38 @@ class BlocklyToolboxCategory extends React.PureComponent {
       blocks={category.get('blocks')}
       categories={category.get('categories')}
       buttons={category.get('buttons')}
+      labels={category.get('labels')}
+      items={category.get('items')}
     />);
   };
 
+  static renderItem = (item, key) => {
+    let renderedItem = null;
+    if (item.get('element') === 'block') {
+      renderedItem = BlocklyToolboxBlock.renderBlock(item, key);
+    } else if (item.get('element') === 'button') {
+      renderedItem = BlocklyToolboxButton.renderButton(item, key);
+    } else if (item.get('element') === 'label') {
+      renderedItem = BlocklyToolboxLabel.renderLabel(item, key);
+    }
+    return renderedItem;
+  };
+
+  getChildren() {
+    const children = {};
+    if (this.props.items) {
+      children.items = (this.props.items || []).map(BlocklyToolboxCategory.renderItem);
+    } else {
+      children.blocks = (this.props.blocks || []).map(BlocklyToolboxBlock.renderBlock);
+      children.buttons = (this.props.buttons || []).map(BlocklyToolboxButton.renderButton);
+      children.labels = (this.props.labels || []).map(BlocklyToolboxLabel.renderLabel);
+    }
+    return children;
+  }
+
   render = () => {
     const subcategories = (this.props.categories || []).map(BlocklyToolboxCategory.renderCategory);
-    const blocks = (this.props.blocks || []).map(BlocklyToolboxBlock.renderBlock);
-    const buttons = (this.props.buttons || []).map(BlocklyToolboxButton.renderButton);
+    const children = this.getChildren();
 
     return (
       <category
@@ -56,8 +86,9 @@ class BlocklyToolboxCategory extends React.PureComponent {
         colour={this.props.colour}
         expanded={this.props.expanded}
       >
-        {buttons}
-        {blocks}
+        {children.items}
+        {children.blocks}
+        {children.buttons}
         {subcategories}
       </category>
     );
