@@ -1,3 +1,7 @@
+# This package is deprecated
+
+For new releases of this package, please see [react-blockly](https://github.com/nbudin/react-blockly) instead.
+
 # Version 3.3.0 - June 7, 2019
 
 * Support expanded property on category (thanks @doper1234)
