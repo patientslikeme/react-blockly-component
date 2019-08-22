@@ -15,6 +15,12 @@ function debounce(func, wait) {
   };
 }
 
+const CallbackType = PropTypes.shape({
+  key: PropTypes.string.isRequired,
+  callback: PropTypes.func.isRequired,
+});
+
+
 class BlocklyWorkspace extends React.Component {
   static propTypes = {
     initialXml: PropTypes.string,
@@ -24,6 +30,8 @@ class BlocklyWorkspace extends React.Component {
     workspaceDidChange: PropTypes.func,
     onImportXmlError: PropTypes.func,
     toolboxMode: PropTypes.oneOf(['CATEGORIES', 'BLOCKS']),
+    buttonCallbacks: PropTypes.arrayOf(CallbackType.isRequired),
+    toolboxCategoryCallbacks: PropTypes.arrayOf(CallbackType.isRequired),
   };
 
   static defaultProps = {
@@ -34,6 +42,8 @@ class BlocklyWorkspace extends React.Component {
     workspaceDidChange: null,
     onImportXmlError: null,
     toolboxMode: 'BLOCKS',
+    buttonCallbacks: null,
+    toolboxCategoryCallbacks: null,
   };
 
   constructor(props) {
@@ -61,6 +71,18 @@ class BlocklyWorkspace extends React.Component {
       } else {
         this.setState({ xml: null }, this.xmlDidChange);
       }
+    }
+
+    if (this.props.buttonCallbacks) {
+      this.props.buttonCallbacks.forEach((item) => {
+        this.state.workspace.registerButtonCallback(item.key, item.callback);
+      });
+    }
+
+    if (this.props.toolboxCategoryCallbacks) {
+      this.props.toolboxCategoryCallbacks.forEach((item) => {
+        this.state.workspace.registerToolboxCategoryCallback(item.key, item.callback);
+      });
     }
 
     this.state.workspace.addChangeListener(this.workspaceDidChange);

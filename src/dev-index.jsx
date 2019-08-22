@@ -19,6 +19,15 @@ class TestEditor extends React.Component {
       this.setState({
         toolboxCategories: this.state.toolboxCategories.concat([
           {
+            name: 'Buttons',
+            items: [
+              { element: 'label', text: 'Show alert!' },
+              { element: 'block', type: 'text' },
+              { element: 'button', text: 'Show alert!', callbackKey: 'showAlertCallback' },
+              { element: 'button', text: 'Log to console!', callbackKey: 'logToConsoleCallback' },
+            ],
+          },
+          {
             name: 'Text2',
             blocks: [
               { type: 'text' },
@@ -63,6 +72,18 @@ class TestEditor extends React.Component {
       initialXml={ConfigFiles.INITIAL_XML}
       wrapperDivClassName="fill-height"
       workspaceDidChange={this.workspaceDidChange}
+      buttonCallbacks={[
+        {
+          key: 'showAlertCallback',
+          // eslint-disable-next-line no-alert
+          callback: () => alert('You clicked me!'),
+        },
+        {
+          key: 'logToConsoleCallback',
+          // eslint-disable-next-line no-console
+          callback: () => console.log('You clicked me!'),
+        },
+      ]}
     />
   )
 }

@@ -31,6 +31,11 @@ const CategoryPropType = PropTypes.shape({
   categories: PropTypes.arrayOf(PropTypes.shape(categoryPropsNonRecursive)),
 });
 
+const CallbackType = PropTypes.shape({
+  key: PropTypes.string.isRequired,
+  callback: PropTypes.func.isRequired,
+});
+
 class BlocklyEditor extends React.Component {
   static propTypes = {
     initialXml: PropTypes.string,
@@ -42,6 +47,8 @@ class BlocklyEditor extends React.Component {
     workspaceDidChange: PropTypes.func,
     onImportXmlError: PropTypes.func,
     processToolboxCategory: PropTypes.func,
+    buttonCallbacks: PropTypes.arrayOf(CallbackType.isRequired),
+    toolboxCategoryCallbacks: PropTypes.arrayOf(CallbackType.isRequired),
   };
 
   static defaultProps = {
@@ -54,6 +61,8 @@ class BlocklyEditor extends React.Component {
     workspaceDidChange: null,
     onImportXmlError: null,
     processToolboxCategory: null,
+    buttonCallbacks: null,
+    toolboxCategoryCallbacks: null,
   };
 
   componentDidMount = () => {
@@ -71,11 +80,13 @@ class BlocklyEditor extends React.Component {
     if (
       (
         this.props.toolboxBlocks &&
-        !Immutable.fromJS(this.props.toolboxBlocks).equals(Immutable.fromJS(prevProps.toolboxBlocks))
+        !Immutable.fromJS(this.props.toolboxBlocks)
+          .equals(Immutable.fromJS(prevProps.toolboxBlocks))
       ) ||
       (
         this.props.toolboxCategories &&
-        !Immutable.fromJS(this.props.toolboxCategories).equals(Immutable.fromJS(prevProps.toolboxCategories))
+        !Immutable.fromJS(this.props.toolboxCategories)
+          .equals(Immutable.fromJS(prevProps.toolboxCategories))
       )
     ) {
       this.toolboxDidUpdate();
@@ -133,6 +144,8 @@ class BlocklyEditor extends React.Component {
           workspaceDidChange={this.workspaceDidChange}
           wrapperDivClassName={this.props.wrapperDivClassName}
           workspaceConfiguration={this.props.workspaceConfiguration}
+          buttonCallbacks={this.props.buttonCallbacks}
+          toolboxCategoryCallbacks={this.props.toolboxCategoryCallbacks}
         />
       </div>
     );
